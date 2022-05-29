@@ -1,10 +1,21 @@
+:host {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
 .content {
     display: flex;
     padding: 0 16px;
     flex-direction: column;
     align-items: center;
+    align-items: stretch;
+    flex-grow: 1;
 }
-
+.cards{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .card svg.material-icons path {
     fill: #888;
 }
@@ -14,6 +25,9 @@
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 16px;
+    span{
+        padding-left: 15px;
+    }
 }
 
 .card {
@@ -69,6 +83,9 @@
     margin-left: 60px;
 }
 .circle-link {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
     height: 40px;
     width: 40px;
     border-radius: 40px;
