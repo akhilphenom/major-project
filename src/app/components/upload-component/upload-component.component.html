@@ -4,7 +4,7 @@
     enctype="multipart/form-data"/>
     <label #fileDrag for="file-upload" id="file-drag" (dragover)="fileDragHover($event)" (dragleave)="fileDragHover($event)" 
     (drop)="fileSelectHandler($event)">
-      <img #fileImage id="file-image" src={{imageSource}} alt="Preview" class="hidden">
+      <img #fileImage id="file-image" src="{{imageSource}}" alt="Preview" class="hidden">
       <div #start id="start">
         <i class="fa fa-download" aria-hidden="true"></i>
         <div>Select a file or drag here</div>
