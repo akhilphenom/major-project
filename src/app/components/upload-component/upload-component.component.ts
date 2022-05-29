@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { HttpService } from 'src/app/services/http-service.service';
 import * as tf from '@tensorflow/tfjs';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-upload-component',
@@ -8,6 +9,8 @@ import * as tf from '@tensorflow/tfjs';
   styleUrls: ['./upload-component.component.scss']
 })
 export class UploadComponentComponent implements OnInit {
+
+  @Output() public sendOutput = new EventEmitter();
 
   @ViewChild('fileUpload',{static:true}) public fileSelect: any;
   @ViewChild('fileDrag',{static:true}) public fileDrag: any;
@@ -20,6 +23,7 @@ export class UploadComponentComponent implements OnInit {
   @ViewChild('fileProgress',{static:true}) public fileProgress: any;
 
   public imageSource = '#';
+  public imgData;
   public linearModel: tf.Sequential | undefined;
   public prediction: any;
 
@@ -44,11 +48,32 @@ export class UploadComponentComponent implements OnInit {
     this.fileDrag.nativeElement.className = (e.type === 'dragover' ? 'hover' : 'modal-body file-upload');
   }
 
-  fileSelectHandler(e:any) {
+  readImage = (file)=>{
+    return new Promise((rs,rj)=>{
+      const fileReader = new FileReader();
+      fileReader.onload = ()=>rs(fileReader.result);
+      fileReader.onerror = ()=>rj(fileReader.error);
+      fileReader.readAsDataURL(file);
+    })
+  }
+  emitPredictions(){
+    this.sendOutput.emit(this.predictions);
+  }
+  async fileSelectHandler(e:any) {
     var files = e.target.files || e.dataTransfer.files;
     this.fileDragHover(e);
     const f = files[0];
     this.parseFile(f);
+    this.imgData = await this.readImage(f);
+    const imageElement = document.createElement("img");
+    imageElement.src = this.imgData;
+    imageElement.onload = async () => {
+      let tensorImg = tf.browser.fromPixels(imageElement).resizeBilinear([224,224]).expandDims().toFloat().div(tf.scalar(255));
+      console.log(tensorImg)
+      const output = await this.model.predict(tensorImg) as any;
+      this.predictions = Array.from(output.dataSync());
+      this.emitPredictions();
+    }
     this.uploadFile(f);
   }
 
@@ -100,17 +125,8 @@ export class UploadComponentComponent implements OnInit {
     })
     this._httpService.getFileList().subscribe(res=>{
       this.imageSource=res[0].url;
-      this.loadModelAndPredict(this.imageSource)
     })
     
-  }
-
-  predict(img) {
-    img = img.reshape([1, 28, 28, 1]);
-    img = tf.cast(img, 'float32');
-    const output = this.model.predict(img) as any;
-    this.predictions = Array.from(output.dataSync());
-    console.log(this.predictions);
   }
 
   getKeyByValue(object, value) {
@@ -118,10 +134,9 @@ export class UploadComponentComponent implements OnInit {
   }
   async loadModel() {
     this.model = await tf.loadLayersModel('../../../assets/model.json');
-    console.log(this.model);
   }
   loadImage(src) {
-    console.log(src)
+    
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.src = src;
@@ -149,9 +164,8 @@ export class UploadComponentComponent implements OnInit {
         console.log(pretrainedModel);
         this.loadImage(image).then(img => {
             const processedImage = this.loadAndProcessImage(img);
-            console.log(processedImage);
-            const prediction = pretrainedModel.predict(processedImage);
-            // Because of the way Tensorflow.js works, you must call print on a Tensor instead of console.log.    
+            const prediction = pretrainedModel.predict(processedImage); 
+            // Because of the way Tensorflow.js works, you must call print on a Tensor instead of console.log.   
             (prediction as tf.Tensor).print();
             // const result = prediction.as1D().argMax().dataSync()[0];
             const result = 'dont care'

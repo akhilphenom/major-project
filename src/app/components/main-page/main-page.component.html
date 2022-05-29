@@ -22,7 +22,7 @@
         <pre *ngSwitchCase="'test'">ng test</pre>
         <pre *ngSwitchCase="'build'">ng build</pre>
     </div>
-    <app-upload-component></app-upload-component>
+    <app-upload-component (sendOutput)="getPredictions($event)"></app-upload-component>
     <!-- Links -->
     <div class="card-container">
       <a class="circle-link" title="Find a Local Meetup" href="https://www.meetup.com/find/?keywords=angular" target="_blank" rel="noopener">
