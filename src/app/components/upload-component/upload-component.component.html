@@ -1,0 +1,21 @@
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<form #fileUploadForm id="file-upload-form" class="uploader">
+    <input #fileUpload (change)="fileSelectHandler($event)" id="file-upload" type="file" name="file" accept="image/*" 
+    enctype="multipart/form-data"/>
+    <label #fileDrag for="file-upload" id="file-drag" (dragover)="fileDragHover($event)" (dragleave)="fileDragHover($event)" 
+    (drop)="fileSelectHandler($event)">
+      <img #fileImage id="file-image" src={{imageSource}} alt="Preview" class="hidden">
+      <div #start id="start">
+        <i class="fa fa-download" aria-hidden="true"></i>
+        <div>Select a file or drag here</div>
+        <div #notImage id="notimage" class="hidden">Please select an image</div>
+        <span id="file-upload-btn" class="btn btn-primary">Select a file</span>
+      </div>
+      <div #response id="response" class="hidden">
+        <div #messages id="messages"></div>
+        <progress #fileProgress class="progress" id="file-progress" value="0">
+          <span>0</span>%
+        </progress>
+      </div>
+    </label>
+  </form>
