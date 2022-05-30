@@ -9,7 +9,7 @@ global.__baseUrl = "http://localhost:9909"
 var corsOptions = {
   origin: "http://localhost:8081"
 };
-const port = 9909;
+const port = process.env.PORT || 9909;
 app.use(cors(corsOptions));
 const initRoutes = require("./routes");
 console.log(path.join(__dirname,'/../'))

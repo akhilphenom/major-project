@@ -28,7 +28,7 @@ const getListFiles = (req, res) => {
         message: "Unable to scan files!",
       });
     }
-    const url = 'http://'+req.hostname +':9909'
+    const url = 'http://'+req.hostname + process.env.PORT;
     let fileInfos = [];
     files.forEach((file) => {
       fileInfos.push({
