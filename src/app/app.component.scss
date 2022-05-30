@@ -14,7 +14,26 @@ html,body{
     flex-grow: 1;
     display: flex;
     span{
-        padding: 2rem 0 1.1rem;
+        padding: 0.5rem 0 1.1rem;
+        h1{
+            color: saddlebrown;
+        }
+        h2{
+            font-family: monospace;
+            font-size: 1.7rem;
+            color: saddlebrown;
+        }
+    }
+    .names{
+        color: slategray;
+        font-family: monospace;
+        p{
+            font-size: 1.2rem;
+        }
+        h6{
+            font-size: 0.8rem;
+            margin: 3px 0 12px;
+        }
     }
 }
 
@@ -38,13 +57,11 @@ h5,
 h6 {
     margin: 8px 0;
 }
-
 p {
     margin: 0;
 }
 .spacer {
-    flex: 1;
-    max-width: 90%;
+    max-width: 85%;
     text-align: center;
 }
 .toolbar {
@@ -52,15 +69,17 @@ p {
     left: 0;
     right: 0;
     display: flex;
+    flex-basis: 25%;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: #ebebeb;
+    background-color: #fcfcfc;
     color: #1976d2;
     font-weight: 600;
+    border-right: 2px solid #b3b3b3;
 }
 .header{
-    background-color: #1976d2;
+    background-color: #454cad;
     height: 80px;
     position: sticky;
     top: 0;

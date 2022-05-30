@@ -25,15 +25,10 @@ export class UploadComponentComponent implements OnInit {
   public imageSource = '#';
   public imgData;
   public linearModel: tf.Sequential | undefined;
-  public prediction: any;
 
   public model: tf.LayersModel | undefined;
   public imageForTest = new Image();
-  public classes = {
-    'a': 0, 'b': 1,
-    'c': 2, 'd':3, 'e':4, 'f':5, 'g':6,
-  };
-  predictions: any;
+  public predictions: any;
   public predicted_class;
 
   constructor(
@@ -60,6 +55,7 @@ export class UploadComponentComponent implements OnInit {
     this.sendOutput.emit(this.predictions);
   }
   async fileSelectHandler(e:any) {
+    this.imgData=null;
     var files = e.target.files || e.dataTransfer.files;
     this.fileDragHover(e);
     const f = files[0];
@@ -69,7 +65,6 @@ export class UploadComponentComponent implements OnInit {
     imageElement.src = this.imgData;
     imageElement.onload = async () => {
       let tensorImg = tf.browser.fromPixels(imageElement).resizeBilinear([224,224]).expandDims().toFloat().div(tf.scalar(255));
-      console.log(tensorImg)
       const output = await this.model.predict(tensorImg) as any;
       this.predictions = Array.from(output.dataSync());
       this.emitPredictions();
@@ -129,56 +124,10 @@ export class UploadComponentComponent implements OnInit {
     
   }
 
-  getKeyByValue(object, value) {
-    return Object.keys(object).find(key => object[key] === value);
-  }
   async loadModel() {
     this.model = await tf.loadLayersModel('../../../assets/model.json');
   }
-  loadImage(src) {
-    
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-    });
-  }
 
-  resizeImage(image) {
-    return tf.image.resizeBilinear(image, [224, 224]);
-  }
-
-  batchImage(image) {
-    const batchedImage = image.expandDims(0);
-    return batchedImage.toFloat().div(tf.scalar(255));
-  }
-
-  loadAndProcessImage(image) {
-    const resizedImage = this.resizeImage(image);
-    const batchedImage = this.batchImage(resizedImage);
-    console.log(image);
-    return batchedImage;
-  }
-
-  loadModelAndPredict(image) {
-    tf.loadLayersModel('../../../assets/model.json').then(pretrainedModel => {
-        console.log(pretrainedModel);
-        this.loadImage(image).then(img => {
-            const processedImage = this.loadAndProcessImage(img);
-            const prediction = pretrainedModel.predict(processedImage); 
-            // Because of the way Tensorflow.js works, you must call print on a Tensor instead of console.log.   
-            (prediction as tf.Tensor).print();
-            // const result = prediction.as1D().argMax().dataSync()[0];
-            const result = 'dont care'
-            console.log(result);
-            this.predicted_class = this.getKeyByValue(this.classes, result);
-            console.log(this.predicted_class);
-            document.querySelector("#hidebtn").innerHTML = "Predict";
-        },
-        err=>{
-          console.log(err)
-        });
-    })
-}
   ngOnInit(): void {
     this.loadModel();
     if (!(window.File && window.FileList && window.FileReader)) {
