@@ -19,12 +19,13 @@ export class MainPageComponent implements OnInit {
     'Vascular lesions' : 8
   };
   public selected:string ='';
-  public predictions;
+  public predictions=null;
   public predictionClasses=[];
   constructor() { }
 
   ngOnInit(): void {
     this.selected='';
+    this.predictions=null;
   }
   public getPredictions(event){
     this.predictions=event;
@@ -39,6 +40,5 @@ export class MainPageComponent implements OnInit {
     for(let i=0;i<Object.keys(this.classes).length;i++){
       this.predictionClasses[i]=Object.keys(this.classes).find(key=>this.classes[key]==i);
     }
-    console.log(this.predictionClasses)
   }
 }

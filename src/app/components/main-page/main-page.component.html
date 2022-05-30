@@ -5,7 +5,7 @@
     </div>
   </div>
     <app-upload-component (sendOutput)="getPredictions($event)"></app-upload-component>
-    <div class="cards">
+    <div *ngIf="predictions" class="cards">
       <div class="card-container">
         <button class="card card-small" (click)="selected = 'component'" tabindex="0">
           <object data="../../../assets/images/more.svg" width="24" height="24"> </object>
