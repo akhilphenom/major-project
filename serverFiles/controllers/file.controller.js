@@ -28,11 +28,12 @@ const getListFiles = (req, res) => {
         message: "Unable to scan files!",
       });
     }
+    const url = 'http://'+req.hostname +':9909'
     let fileInfos = [];
     files.forEach((file) => {
       fileInfos.push({
         name: file,
-        url: __baseUrl +'/files/' +file,
+        url: url +'/files/' +file,
       });
     });
     res.status(200).send(fileInfos);
